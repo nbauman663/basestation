@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block body %}
+<h3>Sensor Data Download</h3>
+
+<hr>
+
+<form method="post" class="form-horizontal">
+	<div class="form-group">
+		<label for="start" class="col-sm-2 control-label">Date Range</label>
+		<div class="col-sm-5">
+			<div class="input-daterange input-group" id="datepicker">
+				<input type="text" class="input-sm form-control" name="start" id="start" placeholder="start"/>
+				<label for="end" class="input-group-addon">to</label>
+				<input type="text" class="input-sm form-control" name="end" id="end" placeholder="end"/>
+			</div>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Average</label>
+		<div class="btn-toolbar" class="col-sm-10">
+			<label style="margin:0px 7px 0px;">
+				<input type="radio" name="average" id="average-none" value="none" checked="true">
+				None
+			</label>
+			<label style="margin:0px 7px 0px;">
+				<input type="radio" name="average" id="average-daily" value="daily">
+				Daily
+			</label>
+			<label style="margin:0px 7px 0px;">
+				<input type="radio" name="average" id="average-monthly" value="monthly">
+				Monthly
+			</label>
+			<label style="margin:0px 7px 0px;">
+				<input type="radio" name="average" id="average-yearly" value="yearly">
+				Yearly
+			</label>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Nodes</label>
+		<div class="col-sm-10">
+			{% for node in nodes %}
+			<label class="checkbox-inline">
+				<input type="checkbox" id="node{{ node }}-checkbox" name="node-{{ node }}" checked="true"/>
+				{{ node }}
+			</label>
+			{% endfor %}
+		</div>
+	</div>
+
+	<div class="form-group row">
+		<label class="col-sm-2 control-label">Fields</label>
+		<div class="col-sm-10">
+			{% for field, description, check in fields %}
+			<div class="checkbox">
+				<label class="col-sm-2">
+					<input type="checkbox" id="field-{{ field }}-checkbox" name="field-{{ field }}" {% if check %} checked="true" {% endif %}/>
+					<code>{{ field }}</code>
+				</label>
+				<label for="field-{{ field }}-checkbox" class="">{{ description }}</label>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<hr>
+
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-5">
+			<button type="submit" class="btn btn-primary">Download CSV File</button>
+		</div>
+	</div>
+</form>
+
+<script type="text/javascript"> $('#datepicker').datepicker(); </script>
+{% endblock %}
+

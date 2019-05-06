@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>GCP Sensor Network (Maintenance in Progress)</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- Bootstrap -->
+		<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" media="screen">
+		<link href="{{ url_for('static', filename='css/bootstrap-datepicker3.css') }}" rel="stylesheet" media="screen">
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+		<script src="http://code.highcharts.com/stock/highstock.js"></script>
+		<script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap-datepicker.js') }}"></script>
+		<style>
+			body {padding-top: 60px;}
+		</style>
+	</head>
+	<body>
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class"navbar-header">
+					<a class="navbar-brand" href="/">GCP Sensor Network</a>
+				</div>
+				<ul class="nav navbar-nav">
+					<li {% if request.endpoint == "graph" %}class="active"{% endif %}><a href="/">Visualization</a></li>
+					<li {% if request.endpoint == "instantaneous" %}class="active"{% endif %}><a href="/instantaneous">Instantaneous</a></li>
+					<li {% if request.endpoint == "download" %}class="active"{% endif %}><a href="/download">Download</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			{% for message in get_flashed_messages() %}
+			<div class=flash>{{ message }}</div>
+			{% endfor %}
+
+			{% block body %}{% endblock %}
+
+			<hr>
+			<footer>
+				<p>With much love, UNO ECE Team 10 2016</p>
+			</footer>
+		</div>
+	</body>
+</html>
+

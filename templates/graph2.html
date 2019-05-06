@@ -1,0 +1,243 @@
+<!-- HighCharts Graphing Page -->
+{% extends "layout.html" %}
+{% block body %}
+<h3>Sensor Data Visualization</h3>
+
+<hr>
+
+<div>
+	<form method="post" class="form col-sm-4">
+
+		<!-- get range of dates -->
+		<div class="form-group">
+			<label for="start">Date Range</label>
+				<div class="input-daterange input-group" id="datepicker">
+					<input type="text" class="input-sm form-control" name="start_date" id="start_date" placeholder="start"/>
+					<label for="end" class="input-group-addon">to</label>
+					<input type="text" class="input-sm form-control" name="end_date" id="end_date" placeholder="end"/>
+				</div>
+		</div>
+
+		<div class="form-group">
+			<label>Average</label>
+			<div>
+				<label style="margin:0px 7px 0px;">
+					<input type="radio" name="average" id="average-none" value="none" checked="true">
+					None
+				</label>
+				<label style="margin:0px 7px 0px;">
+					<input type="radio" name="average" id="average-daily" value="daily">
+					Daily
+				</label>
+				<label style="margin:0px 7px 0px;">
+					<input type="radio" name="average" id="average-monthly" value="monthly">
+					Monthly
+				</label>
+				<label style="margin:0px 7px 0px;">
+					<input type="radio" name="average" id="average-yearly" value="yearly">
+					Yearly
+				</label>
+			</div>
+		</div>
+
+		<div id="max-min-form-group" class="form-group" hidden>
+			<div class="checkbox">
+				<label id="max-min-label">
+					<input type="checkbox" name="max-min" id="max-min" checked="false">
+					Include Local Maxima and Minima?
+				</label>
+			</div>
+		</div>
+
+		<!-- get number of nodes -->
+		<div class="form-group">
+			<label>Nodes</label>
+			<div>
+				{% for node in nodes %}
+				<label class="checkbox-inline radio-inline">
+					<input type="checkbox" id="node-{{ node }}" name="node" checked="true"/>
+					{{ node }}
+				</label>
+				{% endfor %}
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label>Y-Axis</label>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-y" id="field-y-air-temp" value="air_temp" checked>
+					Air Temperature
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-y" id="field-y-air-rh" value="air_rh">
+					Relative Humidity
+				</label>
+			</div>
+			<div class="radio" style="margin-top: 20px;">
+				<label>
+					<input type="radio" name="field-y" id="field-y-soil-temp">
+					Soil Temperature
+				</label>
+				<div id="soil-temp-options" hidden>
+					<div class="checkbox" id="soil-temp3-checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-temp3" value="soil_temp3">
+							5 cm
+						</label>
+					</div>
+					<div class="checkbox" id="soil-temp2-checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-temp2" value="soil_temp2">
+							10 cm
+						</label>
+					</div>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-temp1" value="soil_temp1">
+							25 cm
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-y" id="field-y-soil-moisture">
+					Soil Moisture
+				</label>
+				<div id="soil-moisture-options" hidden>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-moisture3" value="soil_moisture3">
+							5 cm
+						</label>
+					</div>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-moisture2" value="soil_moisture2">
+							10 cm
+						</label>
+					</div>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-moisture1" value="soil_moisture1">
+							25 cm
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-y" id="field-y-soil-EC">
+					Soil Electroconductivity
+				</label>
+				<div id="soil-EC-options" hidden>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-EC2" value="soil_EC2">
+							10 cm
+						</label>
+					</div>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-EC1" value="soil_EC1">
+							25 cm
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-y" id="field-y-soil-DP">
+					Soil Apparent Dielectric Permissivity
+				</label>
+				<div id="soil-DP-options" hidden>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-DP2" value="soil_DP2">
+							10 cm
+						</label>
+					</div>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-soil-DP1" value="soil_DP1">
+							25 cm
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="radio" style="margin-top: 20px;">
+				<label>
+					<input type="radio" name="field-y" id="field-y-uvi" value="uvi">
+					UV Index
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-y" id="field-y-solar-irradience">
+					Solar Irradiance
+				</label>
+				<div id="solar-irradience-options" hidden>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-uva" value="uva">
+							UVA
+						</label>
+					</div>
+					<div class="checkbox">
+						<label style="margin-left: 20px;">
+							<input type="checkbox" name="field-y" id="field-y-uvb" value="uvb">
+							UVB
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="radio" style="margin-top: 20px;">
+				<label>
+					<input type="radio" name="field-y" id="field-y-wind-speed" value="wind_speed">
+					Wind Speed
+				</label>
+			</div>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-y" id="field-y-wind-direction" value="wind_direction">
+					Wind Direction
+				</label>
+			</div>
+		</div>
+
+		<div class="form-group" hidden>
+			<label>X-Axis</label>
+			<div class="radio">
+				<label>
+					<input type="radio" name="field-x" id="field-x-time" value="time" checked>
+					Time
+				</label>
+			</div>
+			<!--
+			<div class="radio disabled">
+				<label>
+					<input type="radio" name="field-x" id="field-x-aspect" value="aspect" disabled>
+					Hill Aspect
+				</label>
+			</div>
+			-->
+		</div>
+
+		<button type="button" class="btn btn-primary" id="new_graph">Plot</button>
+	</form>
+
+	<div id="graph-container" class="col-sm-8" style="height: 500px;"></div>
+</div>
+
+<script src="{{ url_for('static', filename='resources/plot.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+		$('#datepicker').datepicker({
+			format: "dd M yyyy"
+			});
+});
+</script>
+{% endblock %}
